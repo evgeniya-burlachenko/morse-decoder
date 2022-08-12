@@ -37,8 +37,36 @@ const MORSE_TABLE = {
     '-----':  '0',
 };
 
+//10 : .
+//11 : -
+//пробел - **********
+//me
+// m: --
+// e: .
+//111110 но!длина буквы == 10 итого:
+//00000011110000000010
+
 function decode(expr) {
-    // write your solution here
+	//разбиваю по 10
+	let ten = /.{10}/g
+	//Метод match() возвращает получившиеся совпадения 
+	//при сопоставлении строки с регулярным выражением.
+    const tenBytes = expr.match(ten);
+    let result = tenBytes.map(tenByte => {
+        if(tenByte=='**********')
+            return ' ';
+		// разбиваю по 2
+		let two = /.{2}/g
+        const twoBytes = tenByte.match(two);
+        let morseCode = twoBytes.map(e=>{
+		//if e == 10 точка  if e ==11 тире или ничего
+            return e=='10'?'.':e=='11'?'-':'';
+        })
+		let res = MORSE_TABLE[morseCode.join('')]
+        return res;
+		// и склеиваю все в строчку
+    }).join('');
+    return result;
 }
 
 module.exports = {
